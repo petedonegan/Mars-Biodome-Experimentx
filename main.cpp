@@ -21,7 +21,7 @@ int main()
 	int missionLength;
 	string teamName = "carRamRod";
 	int choice;
-	int day = 1;
+	
 
 
 	while (done == false)
@@ -32,23 +32,23 @@ int main()
 			<< "2. Run Simulation" << endl
 			<< "3. Quit" << endl
 			<< "---------------------------" << endl
-			<< "Choice >>";
+			<< "Choice >> ";
 		cin >> choice;
 		cout << endl;
 
 		if (choice == 1)
 		{
-			cout << "A. Food grown per day" << endl;
+			cout << "A. Food grown per day: ";
 			cin >> foodGrown_PerDay;
-			cout << "B. Cleanup per person per day" << endl;
+			cout << endl << "B. Cleanup per person per day: ";
 			cin >> cleanup_PerPersonPerDay;
-			cout << "C. Starting units of food" << endl;
+			cout << endl << "C. Starting units of food: ";
 			cin >> foodCount;
-			cout << "D. Mission length, in days" << endl;
+			cout << endl << "D. Mission length, in days: ";
 			cin >> missionLength;
-			cout << "E. People on the mission" << endl;
+			cout << endl << "E. People on the mission: ";
 			cin >> peopleCount;
-			cout << "F. Team name" << endl;
+			cout << endl << "F. Team name: ";
 			cin >> teamName;
 			cout << endl;
 
@@ -67,6 +67,7 @@ int main()
 			cout << endl;
 			oxygenCount = 100;
 			wasteCount = 0;
+			int day = 1;
 			bool missionSuccess = true;
 
 			while (day <= missionLength)
@@ -81,7 +82,40 @@ int main()
 				cout << oxygenCreated_PerDay << " units of oxygen produced" << endl;
 				cout << oxygenUsed_PerPersonPerDay << " units of oxygen used" << endl;
 
+				foodCount = (foodCount + foodGrown_PerDay) - (foodConsumed_PerPersonPerDay * peopleCount);
+				wasteCount = wasteCount + (wasteCreated_PerPersonPerDay * peopleCount) - (cleanup_PerPersonPerDay * peopleCount);
+				if (wasteCount < 0)
+					wasteCount = 0;
+				oxygenCount = oxygenCount - (oxygenUsed_PerPersonPerDay * peopleCount) + oxygenCreated_PerDay;
+				cout << "Status:  " << foodCount << " food,  " << wasteCount << " waste,  " << oxygenCount << " oxygen." << endl;
+				cout << "-------------------------------------------------------" << endl;
+
+				if (foodCount <= 0)
+				{
+					cout << "Mission Failed! You're out of food!" << endl;
+					missionSuccess = false;
+					break;
+				}
+
+				if (wasteCount > 20)
+				{
+					cout << "Mission Failed! You're covered in garbage" << endl;
+					missionSuccess = false;
+					break;
+				}
+
+				if (oxygenCount < 0)
+				{
+					cout << "Mission Failed! You can't breathe!" << endl;
+					missionSuccess = false;
+					break;
+				}
+					day++;
 			}
+			if (missionSuccess == true)
+				cout << "Your mission was a success!!!" << endl << endl << endl;
+			else
+				cout << "Your mission failed" << endl << endl << endl;
 		}
 		if (choice == 3)
 		{
